@@ -1,4 +1,6 @@
 h1. Supported hardware (smart cards and USB tokens)
+https://github.com/OpenSC/OpenSC/wiki/Supported-hardware-(smart-cards-and-USB-tokens)
+
 
 NB! Unless noted otherwise, OpenSC works only with <b>contact interface! </b>
 
