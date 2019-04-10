@@ -1,0 +1,52 @@
+echo        'echo "+---------------------------------------------------------------------------------------------+"  '                      >ftail.sh
+echo        'echo "|     ./ftail.sh xxxx.log | grep ERROR -A 30 -B 30            to monitor debug log            |" >&2  '                      >>ftail.sh
+echo        'echo "+---------------------------------------------------------------------------------------------+"  '                      >>ftail.sh
+echo        'echo  '                      >>ftail.sh
+echo        'if [ "$#" != "1" ]; then  '                      >>ftail.sh
+echo        '    echo "usage: $0 <file>" >&2  '                      >>ftail.sh
+echo        '    exit 1  '                      >>ftail.sh
+echo        'fi  '                      >>ftail.sh
+echo        'FILE="$1"  '                      >>ftail.sh
+echo        'INODE=$(stat -c "%i" "$FILE")  '                      >>ftail.sh
+echo        'fork_tail()  '                      >>ftail.sh
+echo        '{  '                      >>ftail.sh
+echo        '    if [ -r "$FILE" ]; then  '                      >>ftail.sh
+echo        '        tail -f "$FILE" &  '                      >>ftail.sh
+echo        '        PID=$!  '                      >>ftail.sh
+echo        '        #echo "##### $0: FILE $FILE INODE=$INODE PID $PID #####" >&2  '                      >>ftail.sh
+echo        '    else  '                      >>ftail.sh
+echo        '        PID=  '                      >>ftail.sh
+echo        '        INODE=  '                      >>ftail.sh
+echo        '        #echo "##### $0: FILE $FILE NOT FOUND #####" >&2  '                      >>ftail.sh
+echo        '    fi  '                      >>ftail.sh
+echo        '}  '                      >>ftail.sh
+echo        'kill_tail()  '                      >>ftail.sh
+echo        '{  '                      >>ftail.sh
+echo        '    if [ "$PID" ]; then  '                      >>ftail.sh
+echo        '        kill $PID  '                      >>ftail.sh
+echo        '    fi  '                      >>ftail.sh
+echo        '}  '                      >>ftail.sh
+echo        'inode_changed()  '                      >>ftail.sh
+echo        '{  '                      >>ftail.sh
+echo        '    NEW_INODE=$(stat -c "%i" "$FILE" 2>/dev/null)  '                      >>ftail.sh
+echo        '    if [ "$INODE" == "$NEW_INODE" ]; then  '                      >>ftail.sh
+echo        '        return 1  '                      >>ftail.sh
+echo        '    else  '                      >>ftail.sh
+echo        '        INODE=$NEW_INODE  '                      >>ftail.sh
+echo        '    fi  '                      >>ftail.sh
+echo        '}  '                      >>ftail.sh
+echo        'trap "kill_tail; exit" SIGINT SIGTERM SIGQUIT EXIT  '                      >>ftail.sh
+echo        'fork_tail  '                      >>ftail.sh
+echo        'while :  '                      >>ftail.sh
+echo        'do  '                      >>ftail.sh
+echo        '    sleep 5  '                      >>ftail.sh
+echo        '    if inode_changed; then  '                      >>ftail.sh
+echo        '        kill_tail  '                      >>ftail.sh
+echo        '        fork_tail  '                      >>ftail.sh
+echo        '    fi  '                      >>ftail.sh
+echo        'done  '                      >>ftail.sh
+chmod 757 ftail.sh
+echo $PATH 
+PATH=$PATH:`pwd`
+export PATH 
+echo $PATH
