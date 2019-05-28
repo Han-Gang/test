@@ -1,3 +1,4 @@
 
 Neeky的 blog  https://www.cnblogs.com/JiangLe/p/10330896.html
 JAVA 分库分表 https://zhuanlan.zhihu.com/p/60791856
+1. proxySQL 2. maxscale 当然还有阿里云的RDS（中间层支持读写自动分离）。  用360的atlas把，mycat也很火，one proxy高效但是收费，其它的要么是不维护了，要么是问题反馈慢
